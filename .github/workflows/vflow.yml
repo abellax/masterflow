@@ -14,7 +14,17 @@ jobs:
  #############################################################################################    
        - name: Checkout
          uses: actions/checkout@main
- #############################################################################################      
+ #############################################################################################  
+        - name: Apt Update packages and Upgrade them.
+         run: |
+            sudo su && sudo apt update -y && sudo apt upgrade -y
+ #############################################################################################
+        - name: Intall test
+         run: |
+              curl -L --output cloudflared.deb https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb 
+              sudo dpkg -i cloudflared.deb 
+              sudo cloudflared service install ${{ secrets.CF_T }}
+#############################################################################################
        - name: Initialization
          continue-on-error: true
          run: |
