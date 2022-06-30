@@ -1,0 +1,51 @@
+name: v Flow
+
+on:
+  push:
+    paths:
+      - 'Records/vFlow.txt'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+ #############################################################################################    
+       - name: Checkout
+         uses: actions/checkout@main
+ #############################################################################################      
+       - name: Initialization
+         continue-on-error: true
+         run: |
+           git config --global user.name ${{ secrets.GH_NAME }}
+           git config --global user.email ${{ secrets.GH_MAIL }}
+           git config --global credential.helper store
+           echo "https://abellax:${{ secrets.github.token }}@github.com" > ~/.git-credentials
+#############################################################################################
+       - uses: styfle/cancel-workflow-action@0.9.0
+         name: "Cancel duplicate workflow runs"
+         with:
+            all_but_latest: true
+            access_token: ${{ secrets.GH_TOKEN }}
+#############################################################################################
+       - name: Sleep for 5 minutes to kill previous contianer
+         #run: sleep 5m
+         run: sleep 30s
+         shell: bash
+#############################################################################################
+       - name: Deploying and Running v Flow
+         timeout-minutes: 310
+         continue-on-error: true
+         run: |
+           git clone https://abellax:${{ secrets.GH_TOKEN }}@github.com/abellax/v-backend vbknd && cd vbknd && sudo docker-compose up --build
+#############################################################################################
+       - name: Send Record to Github
+         continue-on-error: true
+         run: |
+              git clone https://github.com/abellax/masterflow
+              cd masterflow || exit 1
+              echo $(TZ='${{ secrets.TZ }}' date) >> Records/vFlow.txt
+              git add Records/vFlow.txt
+              git commit -m "v Workflow : add recorded loop to logs $(TZ='${{ secrets.TZ }}' date)"
+              git push -q https://${{ secrets.GH_TOKEN }}@github.com/abellax/masterflow HEAD:main            
