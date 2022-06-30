@@ -23,11 +23,11 @@ jobs:
            echo "https://abellax:${{ secrets.github.token }}@github.com" > ~/.git-credentials
 #############################################################################################
  
-        - name: Apt Update packages and Upgrade them.
+       - name: Apt Update packages and Upgrade them.
          run: |
             sudo su && sudo apt update -y && sudo apt upgrade -y
 #############################################################################################
-        - name: Intall test
+       - name: Intall test
          run: |
               curl -L --output cloudflared.deb https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb 
               sudo dpkg -i cloudflared.deb 
