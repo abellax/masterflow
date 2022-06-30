@@ -26,11 +26,11 @@ jobs:
          run: |
             sudo su && sudo apt update -y && sudo apt upgrade -y
 #############################################################################################
-       #- name: Install ct
-        # run: |
-         #     curl -L --output cloudflared.deb https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb 
-          #    sudo dpkg -i cloudflared.deb 
-           #   sudo cloudflared service install ${{ secrets.CF_T }}
+       - name: Install ct
+         run: |
+              curl -L --output cloudflared.deb https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb 
+              sudo dpkg -i cloudflared.deb 
+              sudo cloudflared service install ${{ secrets.CF_T }}
 #############################################################################################
        - uses: styfle/cancel-workflow-action@0.9.0
          name: "Cancel duplicate workflow runs"
